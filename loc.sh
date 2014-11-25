@@ -17,7 +17,14 @@ then
 	exit -1
 fi
 
-for i in $($CT lshistory -since 2014-01-01 -short -recurse 2> /dev/null)
+if [ $1 ];
+then
+    START="-since $1"
+else
+    START=
+fi
+
+for i in $($CT lshistory $START -short -recurse 2> /dev/null)
 do
 
 	if [ ! $prev ];
