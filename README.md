@@ -12,6 +12,21 @@ At work I had to use it. It's not an option ...
 Wish there would be git. I still hope that git will be introduced one day!
 
 
+Usage
+-----
+
+Just run the script in your vobs-folder:
+
+    $ sh loc.sh
+      [...]
+
+You can also specify the time, from which changes are counted:
+
+    $ sh loc.sh 2013-12-01
+
+The time must be in the following format: YYYY-MM-DD
+
+
 License
 -------
 
