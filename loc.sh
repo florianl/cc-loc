@@ -2,9 +2,6 @@
 
 CT=$(which cleartool 2> /dev/null)
 
-prev=
-prevFN=
-cur=
 curFN=
 IFS='
 '
@@ -20,23 +17,21 @@ then
 	exit -1
 fi
 
-for i in $($CT lsvtree -all -obsolete -nco * 2> /dev/null)
+for i in $($CT lshistory -since 2014-01-01 -short -recurse 2> /dev/null)
 do
-	prev=$cur
-	cur=$i
 
 	if [ ! $prev ];
 	then
 		continue
 	fi
 
-	if [ ! $(echo $cur | cut -d / -f 3) ];
+	if [ ! $(echo $i | rev | cut -d / -f 1) ];
 	then
 		if [[ $addFile == 0 && $remFile == 0 ]];
 		then
 			continue
 		fi
-		echo "[ ] " $prevFN
+		echo "[ ] " $i
 		echo $addFile "lines added"
 		echo $remFile "lines removed"
 		addFile=0
@@ -44,20 +39,14 @@ do
 		continue
 	fi
 
-	if [ ! $(echo $prev | cut -d / -f 3) ];
-	then
-		continue
-	fi
-
-	curFN=$(echo $cur | cut -d @ -f 1)
-	prevFN=$(echo $prev | cut -d @ -f 1)
+	curFN=$(echo $i | cut -d @ -f 1)
 
 	if [ -d $curFN ];
 	then
 		continue
 	fi
 
-	difflog=$($CT diff -serial_format $prev $cur)
+	difflog=$($CT diff -serial_format -predecessor $cur)
 
 	for line in $difflog
 	do
