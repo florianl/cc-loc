@@ -2,7 +2,9 @@
 
 CT=$(which cleartool 2> /dev/null)
 
-curFN=
+curE=
+curX=
+prevE=
 IFS='
 '
 addFile=0
@@ -24,15 +26,17 @@ else
     START=
 fi
 
-for i in $($CT lshistory $START -short -recurse 2> /dev/null)
+for i in $($CT lshistory $START -recurse -fmt "%En;%Xn;%u" 2> /dev/null)
 do
 
-	if [ ! $prev ];
+	curE=$(echo $i | cut -d ; -f 1)
+
+	if [ ! $curE ];
 	then
 		continue
 	fi
 
-	if [ ! $(echo $i | rev | cut -d / -f 1) ];
+	if [ $curE != $prevE ];
 	then
 		if [[ $addFile == 0 && $remFile == 0 ]];
 		then
@@ -46,14 +50,16 @@ do
 		continue
 	fi
 
-	curFN=$(echo $i | cut -d @ -f 1)
+	prevE=$curE
+	curX=$(echo $i | cut -d ; -f 2)
 
-	if [ -d $curFN ];
+
+	if [ -d $curE ];
 	then
 		continue
 	fi
 
-	difflog=$($CT diff -serial_format -predecessor $cur)
+	difflog=$($CT diff -serial_format -options "-blank_ignore" -predecessor $curX)
 
 	for line in $difflog
 	do
