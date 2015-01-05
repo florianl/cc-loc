@@ -29,7 +29,7 @@ fi
 for i in $($CT lshistory $START -recurse -fmt "%En;%Xn;%u" 2> /dev/null)
 do
 
-	curE=$(echo $i | cut -d ; -f 1)
+	curE=$(echo $i | cut -d ";" -f 1)
 
 	if [ ! $curE ];
 	then
