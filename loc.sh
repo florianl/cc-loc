@@ -26,7 +26,7 @@ else
     START=
 fi
 
-for i in $($CT lshistory $START -recurse -fmt "%En;%Xn;%u" 2> /dev/null)
+for i in $($CT lshistory $START -recurse -fmt "%En;%Xn;%u\n" 2> /dev/null)
 do
 
 	curE=$(echo $i | cut -d ";" -f 1)
@@ -51,7 +51,7 @@ do
 	fi
 
 	prevE=$curE
-	curX=$(echo $i | cut -d ; -f 2)
+	curX=$(echo $i | cut -d ";" -f 2)
 
 
 	if [ -d $curE ];
